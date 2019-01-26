@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+    <p id='status'>Status is <%= status %></p>
+    <p id='last-checked-time'>Last checked time is <%= lastCheckedTime %></p>
+
+    <select id='sl-ping-freq'>
+      <% for(var k in pingFrequencies) { %>
+        <% if (pingFrequencies[k] == true) { %>
+          <option value=<%= k %> selected><%= k %> min</option>
+        <% } else { %>
+          <option value=<%= k %>><%= k %> min</option>
+        <% } %>
+      <% } %>
+    </select>
+    <button id='bt-turnon'>Turn on</button>
+  </body>
+
+  <script>
+    function turnStatusOn() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("status").innerHTML = 'Status is ' + JSON.parse(this.responseText).status;
+        }
+      };
+      xhttp.open("GET", "status-on", true);
+      xhttp.send();
+    }
+
+    function updatePingFrequency(evt) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          // do nothing
+        }
+      };
+
+      xhttp.open("GET", "update-ping-freq" + '?pingfreq=' + evt.target[evt.target.selectedIndex].value, true);
+      xhttp.send();
+    }
+
+    function init() {
+      document.getElementById('bt-turnon').addEventListener('click', turnStatusOn);
+      document.getElementById('sl-ping-freq').addEventListener('click', updatePingFrequency);
+    }
+
+    init();
+  </script>
+</html>

@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+def props = new Properties()
+if (rootProject.file("config.properties").exists()) {
+    props.load(new FileInputStream(rootProject.file("config.properties")))
+} else {
+    project.logger.info('INFO: Set the values in config.properties.')
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "dutta.software.wakeonlan"
+        minSdkVersion 17
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 17
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "PROP_MAC", "${props["mac"]}"
+        buildConfigField "String", "PROP_IP", "${props["ip"]}"
+        buildConfigField "int", "PROP_PORT", "${props["port"]}"
+        buildConfigField "String", "PROP_STATUS_URL", "${props["statusUrl"]}"
+        buildConfigField "String", "PROP_STATUS_OFF_URL", "${props["statusOffUrl"]}"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
